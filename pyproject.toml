@@ -1,0 +1,59 @@
+[project]
+name = "lib-x-logging"
+version = "1.6.0"
+description = "Lightweight python logging extension."
+readme = "README.md"
+authors = [
+    { name = "Xing Xing", email = "x.xing.work@gmail.com" }
+]
+license = "MIT"
+license-files = ["LICENSE"]
+requires-python = ">=3.11"
+
+dependencies = [
+    "colorlog"
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0",
+    "pytest-mock",
+    "ruff",
+    "setuptools",
+    "wheel",
+    "twine",
+    "build",
+]
+
+[tool.pytest.ini_options]
+pythonpath = ["."]
+testpaths = ["lib-x-logging"]
+
+[build-system]
+requires = [
+  "setuptools",
+  "wheel",
+  "twine",
+  "build"
+]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools]
+include-package-data = true
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["assetlake*"]
+exclude = ["tests*"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+fix = true
+
+[tool.ruff.lint]
+select = ["E", "F", "I"]
+ignore = ["E501"]
+
+[tool.ruff.lint.isort]
+force-single-line = false
