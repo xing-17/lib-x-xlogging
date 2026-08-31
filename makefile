@@ -1,6 +1,6 @@
 # PyPI package name (from pyproject.toml)
 PKG_NAME := $(shell grep '^name' pyproject.toml | head -1 | cut -d '"' -f2)
-PKG_ALIAS := 瓮城
+PKG_ALIAS := 木鸢
 PKG_VERS := $(shell grep '^version' pyproject.toml | head -1 | cut -d '"' -f2)
 PKG_PATH := $(abspath .)
 ENV_NAME := $(PKG_NAME)

@@ -11,6 +11,35 @@ from ._common import (
 
 
 class TreeFormat(logging.Formatter):
+    """
+    Tree formatter for logging.
+
+    Args:
+        date_format (str | None):
+            The date format for log messages. If None, a default date format will be used.
+        tb_as_str (bool):
+            Whether to convert traceback objects to strings. Default is False.
+        ignore_unset (bool):
+            Whether to ignore unset attributes in the log record. Default is True.
+        reduced_attrs (bool):
+            Whether to reduce the attributes in the log record. Default is True.
+
+    Example:
+        >>> formatter = TreeFormat(
+        ...     date_format="%Y-%m-%d %H:%M:%S",
+        ...     tb_as_str=True,
+        ...     ignore_unset=True,
+        ...     reduced_attrs=True,
+        ... )
+        >>> formatter.format(record)
+        ... [2024-06-01 12:00:00][INFO]: This is a log message
+        ... ├─ key1: value1
+        ... ├─ key2:
+        ...     ├─ subkey1: subvalue1
+        ...     └─ subkey2: subvalue2
+
+    """
+
     def __init__(
         self,
         date_format: str | None = None,
@@ -54,7 +83,7 @@ class TreeFormat(logging.Formatter):
         data: dict,
         prefix: str,
         lines: list[str],
-    ) -> list[str]:
+    ) -> None:
         items = list(data.items())
         for i, (k, v) in enumerate(items):
             is_last = i == len(items) - 1
@@ -75,7 +104,6 @@ class TreeFormat(logging.Formatter):
                 lines.append(f"{prefix}{connector}{k}: {val_lines[0]}")
                 for vl in val_lines[1:]:
                     lines.append(f"{child_prefix}{vl}")
-        return lines
 
     def format(
         self,

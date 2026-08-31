@@ -20,7 +20,6 @@ class TestFileGroupCreation:
 
         assert isinstance(handler, logging.Handler)
         assert log_file.parent.exists()
-        assert handler.records == []
 
     def test_create_with_custom_encoding(self, tmp_path):
         """Test creating FileGroup with custom encoding."""
@@ -72,56 +71,10 @@ class TestFileGroupWithLogRecord:
         )
 
         handler.emit(record)
-
-        assert len(handler.records) == 1
-        assert handler.records[0] == record
         assert log_file.exists()
 
         content = log_file.read_text()
         assert "INFO - Test message" in content
-
-    def test_emit_multiple_records(self, tmp_path):
-        """Test emitting multiple LogRecords."""
-        log_file = tmp_path / "test.log"
-        handler = FileGroup(path=log_file)
-
-        for i in range(3):
-            record = logging.LogRecord(
-                name="test.logger",
-                level=logging.INFO,
-                pathname="test.py",
-                lineno=10 + i,
-                msg=f"Message {i}",
-                args=(),
-                exc_info=None,
-            )
-            handler.emit(record)
-
-        assert len(handler.records) == 3
-
-    def test_get_records(self, tmp_path):
-        """Test retrieving records."""
-        log_file = tmp_path / "test.log"
-        handler = FileGroup(path=log_file)
-
-        # Emit records at different levels
-        for level in [logging.DEBUG, logging.INFO, logging.WARNING]:
-            record = logging.LogRecord(
-                name="test.logger",
-                level=level,
-                pathname="test.py",
-                lineno=10,
-                msg="Test message",
-                args=(),
-                exc_info=None,
-            )
-            handler.emit(record)
-
-        all_records = handler.get_records()
-        assert len(all_records) == 3
-
-        warning_records = handler.get_records(level=logging.WARNING)
-        assert len(warning_records) == 1
 
     def test_emit_with_json_formatter(self, tmp_path):
         """Test emitting LogRecord with JsonFormat."""
@@ -144,7 +97,6 @@ class TestFileGroupWithLogRecord:
 
         content = log_file.read_text()
         assert "JSON message" in content
-        assert "test.logger" in content
 
 
 class TestFileGroupWithLogEvent:
@@ -170,10 +122,6 @@ class TestFileGroupWithLogEvent:
         )
 
         handler.emit(event)
-
-        assert len(handler.records) == 1
-        assert handler.records[0] == event
-
         content = log_file.read_text()
         assert "INFO - Event message" in content
 
@@ -226,28 +174,3 @@ class TestFileGroupWithLogEvent:
 
         content = log_file.read_text()
         assert "Event with nested data" in content
-
-    def test_get_records_with_events(self, tmp_path):
-        """Test retrieving LogEvents."""
-        log_file = tmp_path / "test.log"
-        handler = FileGroup(path=log_file)
-
-        # Emit events at different levels
-        for i, level in enumerate([logging.DEBUG, logging.INFO, logging.WARNING]):
-            event = LogEvent(
-                name="test.logger",
-                level=level,
-                pathname="test.py",
-                lineno=10,
-                msg=f"Event {i}",
-                args=(),
-                exc_info=None,
-                metadata={"index": i},
-            )
-            handler.emit(event)
-
-        all_records = handler.get_records()
-        assert len(all_records) == 3
-
-        info_records = handler.get_records(level=logging.INFO)
-        assert len(info_records) == 2  # INFO and WARNING

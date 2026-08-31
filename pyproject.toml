@@ -1,5 +1,5 @@
 [project]
-name = "lib-x-logging"
+name = "lib-x-xlogging"
 version = "1.6.0"
 description = "Lightweight python logging extension."
 readme = "README.md"
@@ -27,7 +27,7 @@ dev = [
 
 [tool.pytest.ini_options]
 pythonpath = ["."]
-testpaths = ["lib-x-logging"]
+testpaths = ["tests"]
 
 [build-system]
 requires = [
@@ -43,7 +43,7 @@ include-package-data = true
 
 [tool.setuptools.packages.find]
 where = ["."]
-include = ["assetlake*"]
+include = ["xlogging*"]
 exclude = ["tests*"]
 
 [tool.ruff]

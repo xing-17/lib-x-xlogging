@@ -10,6 +10,25 @@ from colorlog.escape_codes import escape_codes as _esc
 
 
 class IColorConfig:
+    """
+    Color configuration for logging.
+
+    Attributes:
+        color_config (dict[str, str]):
+            A dictionary mapping log levels to color codes.
+        color_reset (str):
+            The escape code to reset color formatting.
+
+    Methods:
+        resolve_colors_config(colors: dict[str, str] | None = None) -> dict[str, str]:
+            Resolves the color configuration based on the provided colors or defaults.
+        get_color_reset() -> str:
+            Returns the escape code to reset color formatting.
+        get_default_colors() -> dict[str, str]:
+            Returns the default color configuration.
+
+    """
+
     color_config: dict[str, str] = {
         "DEBUG": "cyan",
         "INFO": "38;5;244",
@@ -46,6 +65,27 @@ class IColorConfig:
 
 
 class IFormatConfig:
+    """
+    Format configuration for logging.
+
+    Attributes:
+        format (str):
+            The default log message format.
+        colored_format (str):
+            The default colored log message format.
+        date_format (str):
+            The default date format for log messages.
+
+    Methods:
+        resolve_date_format(datefmt: str | None = None) -> str:
+            Resolves the date format based on the provided datefmt or defaults.
+        resolve_format(format: str | None = None) -> str:
+            Resolves the log message format based on the provided format or defaults.
+        resolve_colored_format(format: str | None = None) -> str:
+            Resolves the colored log message format based on the provided format or defaults.
+
+    """
+
     format: str = "[%(asctime)s][%(levelname)s] %(message)s"
     colored_format: str = "%(log_color)s[%(asctime)s][%(levelname)s] %(message)s%(reset)s"
     date_format: str = "%Y-%m-%d %H:%M:%S"
@@ -70,6 +110,21 @@ class IFormatConfig:
 
 
 class ITreeConfig:
+    """
+    Internal Tree configuration
+
+    Attributes:
+        tree_branch (str):
+            The string representation of a tree branch.
+        tree_last (str):
+            The string representation of the last branch in a tree.
+        tree_pipe (str):
+            The string representation of a tree pipe.
+        tree_space (str):
+            The string representation of a tree space.
+
+    """
+
     tree_branch: str = "├── "
     tree_last: str = "└── "
     tree_pipe: str = "│   "
@@ -77,6 +132,11 @@ class ITreeConfig:
 
 
 class ILogRecord:
+    """
+    Internal LogRecord utility class for logging.
+
+    """
+
     @staticmethod
     def serialise_exc(
         record: logging.LogRecord,
@@ -145,16 +205,14 @@ class ILogRecord:
                 "level": record.levelname,
                 "line_no": record.lineno,
                 "func_name": record.funcName,
-                "pathname": getattr(record, "pathname", None),
-                "filename": getattr(record, "filename", None),
                 "module": getattr(record, "module", None),
                 "stack_info": getattr(record, "stack_info", None),
                 "exception": _exc,
                 "metadata": getattr(record, "metadata", None),
                 "tags": getattr(record, "tags", None),
-                "thread": record.thread,
-                "thread_name": record.threadName,
-                "process": record.process,
+                # "thread": record.thread,
+                # "thread_name": record.threadName,
+                # "process": record.process,
             }
         if ignore_unset:
             _result = {k: v for k, v in _result.items() if v is not None}

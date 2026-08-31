@@ -23,6 +23,21 @@ class LogEvent(LogRecord):
         metadata: (dict | None) additional metadata associated with the log event.
         tags: (dict | None) additional tags associated with the log event.
 
+    Example:
+        >>> event = LogEvent(
+        ...     name="my_logger",
+        ...     level=logging.INFO,
+        ...     lineno=42,
+        ...     pathname="/path/to/my_module.py",
+        ...     ...
+        ... )
+        >>> event.created_at
+        datetime.datetime(2024, 6, 1, 12, 0, 0)
+        >>> event.metadata
+        {'user_id': 123, 'session_id': 'abc123'}
+        >>> event.tags
+        {'module': 'my_module', 'function': 'my_function'}
+
     """
 
     def __init__(

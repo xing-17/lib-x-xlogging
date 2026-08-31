@@ -10,14 +10,75 @@ from xlogging.record.event import LogEvent
 
 class EventStream(logging.Logger):
     """
-    Logger that produces LogEvent records.
+    Events logger for logging module
+
+    Args:
+        name (str):
+            The name of the logger.
+        level (int):
+            The logging level for the logger. Default is logging.NOTSET.
+        timezone (ZoneInfo | str | None):
+            The timezone for the logger. If None, defaults to UTC.
+        metadata (dict[str, Any] | None):
+            Additional metadata to include in log records. If None, no additional metadata will be included.
+        tags (dict[str, str] | None):
+            Additional tags to include in log records. If None, no additional tags will be included.
+
+    Methods:
+        info(msg, *args, metadata=None, tags=None, **kwargs):
+            Log a message with level INFO, including optional metadata and tags.
+        debug(msg, *args, metadata=None, tags=None, **kwargs):
+            Log a message with level DEBUG, including optional metadata and tags.
+        warning(msg, *args, metadata=None, tags=None, **kwargs):
+            Log a message with level WARNING, including optional metadata and tags.
+        error(msg, *args, metadata=None, tags=None, **kwargs):
+            Log a message with level ERROR, including optional metadata and tags.
+        critical(msg, *args, metadata=None, tags=None, **kwargs):
+            Log a message with level CRITICAL, including optional metadata and tags.
+        exception(msg, *args, metadata=None, tags=None, **kwargs):
+            Log a message with level ERROR, including exception information, optional metadata and tags.
+
+    Example:
+        >>> logger = EventStream(
+        ...     name="my_logger",
+        ...     level=logging.INFO,
+        ...     timezone="UTC",
+        ...     metadata={"user_id": 123, "session_id": "abc123"},
+        ...     tags={"module": "my_module", "function": "my_function"},
+        ... )
+        >>> logger.info(
+        ...     "This is a log message",
+        ...     metadata={"request_id": "xyz789"},
+        ...     tags={"endpoint": "/api/v1/resource"},
+        ... )
     """
+
+    @classmethod
+    def from_options(
+        cls,
+        name: str | None = None,
+        level: int | None = None,
+        timezone: str | None = None,
+        metadata: dict[str, Any] | None = None,
+        tags: dict[str, str] | None = None,
+        handlers: list[logging.Handler] | None = None,
+    ) -> EventStream:
+        """Create an EventStream from options."""
+        stream = EventStream(
+            name=name,
+            level=level,
+            timezone=timezone,
+            metadata=metadata,
+            tags=tags,
+        )
+        for handler in handlers or []:
+            stream.addHandler(handler)
+        return stream
 
     def __init__(
         self,
         name: str,
         level: int = logging.NOTSET,
-        *,
         timezone: ZoneInfo | str | None = None,
         metadata: dict[str, Any] | None = None,
         tags: dict[str, str] | None = None,
@@ -61,9 +122,15 @@ class EventStream(logging.Logger):
     ) -> dict[str, Any]:
         _extra = dict(kwargs.pop("extra", {}) or {})
         if metadata is not None:
-            _extra["metadata"] = metadata
+            _extra["metadata"] = self._merge_dict(
+                base=self._metadata,
+                update=metadata,
+            )
         if tags is not None:
-            _extra["tags"] = tags
+            _extra["tags"] = self._merge_dict(
+                base=self._tags,
+                update=tags,
+            )
         kwargs["extra"] = _extra
         return kwargs
 
@@ -182,9 +249,15 @@ class EventStream(logging.Logger):
             metadata=_metadata,
             tags=_tags,
         )
-        if extra:
+        if _extra:
             for key, value in _extra.items():
                 if key in {"message", "asctime"} or key in record.__dict__:
                     raise KeyError(f"Attempt to overwrite {key!r} in LogEvent")
                 record.__dict__[key] = value
         return record
+
+    def add(
+        self,
+        group: logging.Handler,
+    ) -> None:
+        self.addHandler(group)

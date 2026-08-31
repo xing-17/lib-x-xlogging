@@ -11,6 +11,44 @@ from ._common import (
 
 
 class JsonFormat(logging.Formatter):
+    """
+    Json Formatter for logging.
+
+    Args:
+        indent (int | None):
+            The number of spaces to use for indentation in the JSON output. If None, no indentation will be applied.
+        sort_keys (bool):
+            Whether to sort the keys in the JSON output. Default is True.
+        ensure_ascii (bool):
+            Whether to escape non-ASCII characters in the JSON output. Default is False.
+        ignore_unset (bool):
+            Whether to ignore unset attributes in the log record. Default is True.
+        date_format (str | None):
+            The date format for log messages. If None, a default date format will be used.
+        tb_as_str (bool):
+            Whether to convert traceback objects to strings. Default is False.
+        reduced_attrs (bool):
+            Whether to reduce the attributes in the log record. Default is False.
+    Example:
+        >>> formatter = JsonFormat(
+        ...     indent=4,
+        ...     sort_keys=True,
+        ...     ensure_ascii=False,
+        ...     ignore_unset=True,
+        ...     date_format="%Y-%m-%d %H:%M:%S",
+        ...     tb_as_str=True,
+        ...     reduced_attrs=False,
+        ... )
+        >>> formatter.format(record)
+        ... {
+        ...     "asctime": "2024-06-01 12:00:00",
+        ...     "levelname": "INFO",
+        ...     "message": "This is a log message",
+        ...     "name": "my_logger",
+        ...     ...
+        ... }
+    """
+
     def __init__(
         self,
         indent: int | None = 4,
