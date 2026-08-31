@@ -16,7 +16,7 @@ class TreeFormat(logging.Formatter):
         date_format: str | None = None,
         tb_as_str: bool = False,
         ignore_unset: bool = True,
-        reduced_attrs: bool = False,
+        reduced_attrs: bool = True,
     ) -> None:
         super().__init__()
         self._date_format = IFormatConfig.resolve_date_format(date_format)
@@ -91,15 +91,16 @@ class TreeFormat(logging.Formatter):
         _message: str = _serial.pop("message", "")
         _created_at: str = _serial.pop("created_at", "")
         _header = f"[{_created_at}][{record.levelname}]: {_message}"
+        _indent = ITreeConfig.tree_space
         lines = [_header]
         for i, (key, value) in enumerate(_serial.items()):
             is_last = i == len(_serial) - 1
             if is_last:
-                connector = ITreeConfig.tree_last
-                child_prefix = ITreeConfig.tree_space
+                connector = _indent + ITreeConfig.tree_last
+                child_prefix = _indent + ITreeConfig.tree_space
             else:
-                connector = ITreeConfig.tree_branch
-                child_prefix = ITreeConfig.tree_pipe
+                connector = _indent + ITreeConfig.tree_branch
+                child_prefix = _indent + ITreeConfig.tree_pipe
             if isinstance(value, dict):
                 lines.append(f"{connector}{key}:")
                 self._render_dict(value, child_prefix, lines)

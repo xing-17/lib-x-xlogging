@@ -131,10 +131,9 @@ class ILogRecord:
         _msg: str = record.getMessage()
         if reduced_attrs:
             _result = {
-                "name": record.name,
                 "message": _msg,
                 "created_at": _cdt,
-                "level_name": record.levelname,
+                "level": record.levelname,
                 "exception": _exc,
                 "metadata": getattr(record, "metadata", None),
                 "tags": getattr(record, "tags", None),
@@ -143,10 +142,7 @@ class ILogRecord:
             _result = {
                 "message": _msg,
                 "created_at": _cdt,
-                "name": record.name,
-                "args": record.args,
-                "level_name": record.levelname,
-                "level_no": record.levelno,
+                "level": record.levelname,
                 "line_no": record.lineno,
                 "func_name": record.funcName,
                 "pathname": getattr(record, "pathname", None),
@@ -156,7 +152,6 @@ class ILogRecord:
                 "exception": _exc,
                 "metadata": getattr(record, "metadata", None),
                 "tags": getattr(record, "tags", None),
-                "msecs": record.msecs,
                 "thread": record.thread,
                 "thread_name": record.threadName,
                 "process": record.process,

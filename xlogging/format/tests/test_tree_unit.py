@@ -182,8 +182,6 @@ class TestTreeFormat:
         result = formatter.format(record)
 
         assert "Debug message" in result
-        assert "name" in result
-        # Should not have verbose fields like pathname
         assert "pathname" not in result.lower() or "/test/path.py" not in result
 
     def test_format_multiline_value(self):

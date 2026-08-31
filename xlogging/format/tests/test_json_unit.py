@@ -30,8 +30,7 @@ class TestJsonFormat:
         data = json.loads(result)
 
         assert data["message"] == "Test message"
-        assert data["name"] == "test.logger"
-        assert data["level_name"] == "INFO"
+        assert data["level"] == "INFO"
         assert "created_at" in data
 
     def test_format_with_log_event(self):
@@ -103,7 +102,7 @@ class TestJsonFormat:
         data = json.loads(result)
 
         assert data["message"] == "Debug message"
-        assert data["level_name"] == "DEBUG"
+        assert data["level"] == "DEBUG"
 
     def test_format_ignore_unset(self):
         """Test that ignore_unset filters out None values."""
@@ -142,10 +141,9 @@ class TestJsonFormat:
         data = json.loads(result)
 
         # With reduced_attrs, should have limited fields
-        assert "name" in data
         assert "message" in data
         assert "created_at" in data
-        assert "level_name" in data
+        assert "level" in data
         # Should not have detailed fields like pathname, filename
         assert "pathname" not in data
         assert "filename" not in data

@@ -236,7 +236,6 @@ class TestColorTreeFormat:
         result = formatter.format(record)
 
         assert "Reduced attrs test" in result
-        assert "name" in result
 
     def test_format_contains_reset_code(self):
         """Test that formatted output contains color reset code."""

@@ -19,10 +19,13 @@ class ColorTreeFormat(TreeFormat):
         date_format: str | None = None,
         tb_as_str: bool = False,
         ignore_unset: bool = True,
-        reduced_attrs: bool = False,
+        reduced_attrs: bool = True,
     ) -> None:
         super().__init__(
+            date_format=date_format,
+            tb_as_str=tb_as_str,
             ignore_unset=ignore_unset,
+            reduced_attrs=reduced_attrs,
         )
         self._colors = IColorConfig.resolve_colors_config(colors)
         self._date_format = IFormatConfig.resolve_date_format(date_format)
@@ -46,15 +49,16 @@ class ColorTreeFormat(TreeFormat):
         _color = self._colors.get(record.levelname, "")
         _reset = IColorConfig.color_reset
         _header = f"{_color}[{_created_at}][{record.levelname}]: {_message} {_reset}"
+        _indent = ITreeConfig.tree_space
         lines = [_header]
         for i, (key, value) in enumerate(_serial.items()):
             is_last = i == len(_serial) - 1
             if is_last:
-                connector = ITreeConfig.tree_last
-                child_prefix = ITreeConfig.tree_space
+                connector = _indent + ITreeConfig.tree_last
+                child_prefix = _indent + ITreeConfig.tree_space
             else:
-                connector = ITreeConfig.tree_branch
-                child_prefix = ITreeConfig.tree_pipe
+                connector = _indent + ITreeConfig.tree_branch
+                child_prefix = _indent + ITreeConfig.tree_pipe
             if isinstance(value, dict):
                 lines.append(f"{connector}{key}:")
                 self._render_dict(value, child_prefix, lines)
