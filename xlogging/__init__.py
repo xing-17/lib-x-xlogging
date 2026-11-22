@@ -6,7 +6,7 @@ from xlogging.format import (
     JsonFormat,
     TreeFormat,
 )
-from xlogging.handler import ConsoleGroup, FileGroup
+from xlogging.handler import ColorConsoleGroup, ConsoleGroup, FileGroup
 from xlogging.record import LogEvent
 from xlogging.stream import EventStream
 
@@ -16,6 +16,7 @@ __all__ = [
     "JsonFormat",
     "TreeFormat",
     "ConsoleGroup",
+    "ColorConsoleGroup",
     "FileGroup",
     "LogEvent",
     "EventStream",
