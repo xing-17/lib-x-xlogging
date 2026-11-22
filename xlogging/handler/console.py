@@ -1,10 +1,9 @@
 from __future__ import annotations
 
 import logging
-from typing import TYPE_CHECKING, Any
+from typing import Any
 
-if TYPE_CHECKING:
-    from xlogging.format.color import ColorFormat
+from xlogging.format.color import ColorFormat
 
 
 class ConsoleGroup(logging.StreamHandler):

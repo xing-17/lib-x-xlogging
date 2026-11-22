@@ -6,9 +6,10 @@ import logging
 import sys
 from io import StringIO
 
+from xlogging.format.color import ColorFormat
 from xlogging.format.json import JsonFormat
 from xlogging.format.tree import TreeFormat
-from xlogging.handler.console import ConsoleGroup
+from xlogging.handler.console import ColorConsoleGroup, ConsoleGroup
 from xlogging.record.event import LogEvent
 
 
@@ -177,3 +178,58 @@ class TestConsoleGroupWithLogEvent:
         output = stream.getvalue()
 
         assert "Event with nested data" in output
+
+
+class TestColorConsoleGroup:
+    """Test ColorConsoleGroup."""
+
+    def test_create_uses_color_format_by_default(self):
+        """Test the handler is created with a ColorFormat formatter."""
+        handler = ColorConsoleGroup()
+
+        assert isinstance(handler, logging.StreamHandler)
+        assert handler.stream == sys.stderr
+        assert isinstance(handler.formatter, ColorFormat)
+
+    def test_create_with_custom_stream(self):
+        """Test creating ColorConsoleGroup with custom stream."""
+        stream = StringIO()
+        handler = ColorConsoleGroup(stream=stream)
+
+        assert handler.stream == stream
+
+    def test_emit_log_record(self):
+        """Test emitting a record writes the message to the stream."""
+        stream = StringIO()
+        handler = ColorConsoleGroup(stream=stream)
+
+        record = logging.LogRecord(
+            name="test.logger",
+            level=logging.INFO,
+            pathname="test.py",
+            lineno=10,
+            msg="Color message",
+            args=(),
+            exc_info=None,
+        )
+
+        handler.emit(record)
+        output = stream.getvalue()
+
+        assert "Color message" in output
+        assert "\x1b[" in output
+
+    def test_emit_via_logger(self):
+        """Test emitting through a real logger."""
+        stream = StringIO()
+        handler = ColorConsoleGroup(stream=stream)
+        logger = logging.getLogger("test.color_console_group")
+        logger.setLevel(logging.DEBUG)
+        logger.propagate = False
+        logger.addHandler(handler)
+        try:
+            logger.error("Color error")
+        finally:
+            logger.removeHandler(handler)
+
+        assert "Color error" in stream.getvalue()
