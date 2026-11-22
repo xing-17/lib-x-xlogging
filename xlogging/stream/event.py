@@ -78,7 +78,7 @@ class EventStream(logging.Logger):
     def __init__(
         self,
         name: str,
-        level: int = logging.NOTSET,
+        level: int = logging.INFO,
         timezone: ZoneInfo | str | None = None,
         metadata: dict[str, Any] | None = None,
         tags: dict[str, str] | None = None,

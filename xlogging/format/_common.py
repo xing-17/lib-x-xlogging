@@ -30,11 +30,11 @@ class IColorConfig:
     """
 
     color_config: dict[str, str] = {
-        "DEBUG": "cyan",
-        "INFO": "38;5;244",
-        "WARNING": "38;5;208",
-        "ERROR": "bold_red",
-        "CRITICAL": "purple",
+        "DEBUG": "\x1b[38;5;244m",  # grey
+        "INFO": "\x1b[32m",  # Green
+        "WARNING": "\x1b[38;5;208m",  # Orange
+        "ERROR": "\x1b[31m",  # Red
+        "CRITICAL": "\x1b[35m",  # Purple
     }
     color_reset: str = _esc.get("reset", "\033[0m")
 

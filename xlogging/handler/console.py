@@ -1,7 +1,10 @@
 from __future__ import annotations
 
 import logging
-from typing import Any
+from typing import TYPE_CHECKING, Any
+
+if TYPE_CHECKING:
+    from xlogging.format.color import ColorFormat
 
 
 class ConsoleGroup(logging.StreamHandler):
@@ -38,3 +41,28 @@ class ConsoleGroup(logging.StreamHandler):
     ) -> None:
         super().__init__(stream)
         self.setFormatter(format)
+
+
+class ColorConsoleGroup(logging.StreamHandler):
+    """
+    Console handler with color support.
+
+    Args:
+        stream (Any):
+            The stream to which the log messages will be written. If None, defaults to sys.stderr.
+
+    Example:
+        >>> handler = ColorConsoleGroup(
+        ...     stream=sys.stdout,
+        ... )
+        >>> logger = logging.getLogger(__name__)
+        >>> logger.addHandler(handler)
+
+    """
+
+    def __init__(
+        self,
+        stream: Any = None,
+    ) -> None:
+        super().__init__(stream)
+        self.setFormatter(ColorFormat())

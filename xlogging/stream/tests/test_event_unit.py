@@ -23,7 +23,7 @@ class TestEventStreamCreation:
         stream = EventStream("test.logger")
 
         assert stream.name == "test.logger"
-        assert stream.level == logging.NOTSET
+        assert stream.level == logging.INFO
         assert isinstance(stream, logging.Logger)
 
     def test_create_with_level(self):
