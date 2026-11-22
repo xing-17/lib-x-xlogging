@@ -7,7 +7,6 @@ authors = [
     { name = "Xing Xing", email = "x.xing.work@gmail.com" }
 ]
 license = "MIT"
-license-files = ["LICENSE"]
 requires-python = ">=3.11"
 
 dependencies = [
