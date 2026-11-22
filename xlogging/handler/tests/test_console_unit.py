@@ -217,7 +217,7 @@ class TestColorConsoleGroup:
         output = stream.getvalue()
 
         assert "Color message" in output
-        assert "\x1b[" in output
+        assert output.startswith("\x1b[32m[")
 
     def test_emit_via_logger(self):
         """Test emitting through a real logger."""

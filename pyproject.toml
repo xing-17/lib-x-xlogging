@@ -1,6 +1,6 @@
 [project]
 name = "lib-x-xlogging"
-version = "1.7"
+version = "1.7.1"
 description = "Lightweight python logging extension."
 readme = "README.md"
 authors = [

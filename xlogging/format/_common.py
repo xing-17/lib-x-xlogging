@@ -51,6 +51,8 @@ class IColorConfig:
         for lvl, color in source.items():
             if color in _esc:
                 resolved[lvl] = _esc[color]
+            elif color.startswith("\x1b"):
+                resolved[lvl] = color
             else:
                 resolved[lvl] = f"\033[{color}m"
         return resolved
